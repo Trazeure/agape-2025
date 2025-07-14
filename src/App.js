@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { ChevronDown, Menu, X, Star, Heart, Users, Calendar, MapPin, Send, CheckCircle, Clock, BookOpen, Shield, Sparkles } from 'lucide-react';
+import { ChevronDown, Menu, X, Star, Heart, Users, Calendar, MapPin, Send, CheckCircle, Clock, BookOpen, Shield,} from 'lucide-react';
+import PasosDeFe from './components/PasosDeFe';
 import logoPrincipal from './assets/logoprincipal.jpg';
 import agape from './assets/agape.jpg';
 
@@ -20,12 +21,13 @@ const AgapeEventPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [expandedFAQ, setExpandedFAQ] = useState(null);
   const [timeLeft, setTimeLeft] = useState({});
-  const [registeredCount, setRegisteredCount] = useState(127);
   const [currentVerse, setCurrentVerse] = useState(0);
   const [formErrors, setFormErrors] = useState({});
   const [touchedFields, setTouchedFields] = useState({});
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
+  const [showIntro, setShowIntro] = useState(true);
+  const [introComplete, setIntroComplete] = useState(false);
 
   // Versículos bíblicos
   const bibleVerses = [
@@ -45,26 +47,32 @@ const AgapeEventPage = () => {
   // Validación inteligente
   const validateField = (name, value) => {
     const errors = { ...formErrors };
-    
     switch (name) {
-      case 'nombre':
-        if (!value) errors.nombre = 'Tu nombre es importante para nosotros';
-        else if (value.length < 3) errors.nombre = 'Por favor ingresa tu nombre completo';
-        else delete errors.nombre;
-        break;
-      
-      case 'edad':
-        if (!value) errors.edad = 'Necesitamos saber tu edad para preparar mejor el evento';
-        else if (value < 13 || value > 100) errors.edad = 'Por favor verifica tu edad';
-        else delete errors.edad;
-        break;
-      
-      case 'congregacion':
-        if (formData.esBautizado === 'si' && !value) {
-          errors.congregacion = 'Nos encantaría conocer tu congregación';
-        } else delete errors.congregacion;
-        break;
-    }
+  case 'nombre':
+    if (!value) errors.nombre = 'Tu nombre es importante para nosotros';
+    else if (value.length < 3) errors.nombre = 'Por favor ingresa tu nombre completo';
+    else delete errors.nombre;
+    break;
+
+  case 'edad':
+    if (!value) errors.edad = 'Necesitamos saber tu edad para preparar mejor el evento';
+    else if (value < 13 || value > 100) errors.edad = 'Por favor verifica tu edad';
+    else delete errors.edad;
+    break;
+
+  case 'congregacion':
+    if (formData.esBautizado === 'si' && !value) {
+      errors.congregacion = 'Nos encantaría conocer tu congregación';
+    } else delete errors.congregacion;
+    break;
+
+  default:
+    // No hacer nada o log opcional:
+    // console.warn(`Campo no reconocido: ${name}`);
+    break;
+}
+    
+
     
     setFormErrors(errors);
   };
@@ -99,13 +107,19 @@ const AgapeEventPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Simulación de contador de registros
+  // Animacion de entrada
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setRegisteredCount(prev => prev + Math.floor(Math.random() * 3));
-    }, 30000);
-    return () => clearInterval(interval);
+  const timer = setTimeout(() => {
+    setIntroComplete(true);
+    setTimeout(() => {
+      setShowIntro(false);
+    }, 500);
+  }, 6050); // 5 segundos de animación
+
+  return () => clearTimeout(timer);
   }, []);
+
 
   // Partículas optimizadas
   useEffect(() => {
@@ -298,6 +312,14 @@ const AgapeEventPage = () => {
     return (filledFields / totalFields) * 100;
   }, [formData]);
 
+  if (showIntro) {
+  return (
+    <div className={`transition-opacity duration-500 ${introComplete ? 'opacity-0' : 'opacity-100'}`}>
+      <PasosDeFe />
+    </div>
+  );
+  }
+
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
       {/* Canvas para partículas */}
@@ -371,8 +393,6 @@ const AgapeEventPage = () => {
             <div className="md:hidden mt-4 pb-4 space-y-2 animate-fadeIn">
               <div className="bg-blue-50 rounded-lg p-3 mb-3">
                 <p className="text-sm font-medium text-blue-700 flex items-center">
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  {registeredCount} personas ya aseguraron su lugar
                 </p>
               </div>
               {[
@@ -421,7 +441,6 @@ const AgapeEventPage = () => {
                   alt="Logo ÁGAPE"
                   className="w-full h-full object-cover rounded-full"
                 />
-
               </div>
             </div>
           </div>
