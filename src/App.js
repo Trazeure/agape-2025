@@ -115,7 +115,7 @@ const AgapeEventPage = () => {
     setTimeout(() => {
       setShowIntro(false);
     }, 500);
-  }, 6050); // 5 segundos de animación
+  }, 6068); // 5 segundos de animación
 
   return () => clearTimeout(timer);
   }, []);

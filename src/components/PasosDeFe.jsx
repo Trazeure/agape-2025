@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Footprints, Cross, Heart, Book, Sparkles, Star, Shield, Users } from 'lucide-react';
+import { Footprints, Heart, Star, Shield, Users } from 'lucide-react';
 import logoPrincipal from '../assets/logoprincipal.jpg';
 
 const PasosDeFe = () => {
