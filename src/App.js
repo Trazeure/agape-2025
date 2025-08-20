@@ -1,21 +1,62 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { ChevronDown, Menu, X, Star, Heart, Users, Calendar, MapPin, Send, CheckCircle, Clock, BookOpen, Shield,} from 'lucide-react';
+import { ChevronDown, Menu, X, Star, Heart, Users, Calendar, MapPin, Send, CheckCircle, Clock, BookOpen, Shield, MessageSquare } from 'lucide-react';
 import PasosDeFe from './components/PasosDeFe';
 import logoPrincipal from './assets/logoprincipal.jpg';
 import agape from './assets/agape.jpg';
+import PanelPreguntas from './components/PanelPreguntas';
+import AudiosHimnos from './components/AudiosHimnos';
 
 const AgapeEventPage = () => {
   const [formData, setFormData] = useState({
     nombre: '',
     esBautizado: '',
     congregacion: '',
-    ciudadMexico: '',
-    pais: '',
     ciudad: '',
     edad: '',
-    necesitaHospedaje: ''
+    necesitaHospedaje: '',
+    talleresPrioridad: {
+      evangelismo: '',
+      homiletica: '',
+      musica: '',
+      ninos: '',
+      visitantes: ''
+    },
+    diaLlegada: ''
   });
 
+  // Talleres
+  const TALLERES = [
+    { key: 'evangelismo', label: '1) Cómo salvar un alma (Evangelismo)' },
+    { key: 'homiletica',  label: '2) De la Biblia al púlpito (Homilética)' },
+    { key: 'musica',      label: '3) Armonía con propósito (Música)' },
+    { key: 'ninos',       label: '4) Instruyendo con amor (Clase de niños)' },
+    { key: 'visitantes',  label: '5) Conociendo a Dios (Ideal para visitantes)' },
+  ];
+  // === Helpers de validación ===
+  // === Helpers de validación ===
+  const isTalleresComplete = (tp) => {
+    // Debe haber 5 valores no vacíos y ser exactamente 1..5 sin repetir
+    const vals = Object.values(tp || {}).filter(Boolean);
+    if (vals.length !== 5) return false;
+    const uniq = new Set(vals);
+    if (uniq.size !== 5) return false;
+    return ['1','2','3','4','5'].every(r => uniq.has(r));
+  };
+
+
+
+  const requiredBase = [
+    'nombre',
+    'esBautizado',
+    'congregacion',
+    'ciudad',
+    'edad',
+    'necesitaHospedaje',
+    'diaLlegada'
+  ];
+
+
+  const OPCIONES_RANK = ['', '1','2','3','4','5'];
   const [showThankYou, setShowThankYou] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -44,38 +85,63 @@ const AgapeEventPage = () => {
     return "¡Buenas noches! No dejes pasar esta oportunidad divina";
   };
 
-  // Validación inteligente
   const validateField = (name, value) => {
     const errors = { ...formErrors };
+
     switch (name) {
-  case 'nombre':
-    if (!value) errors.nombre = 'Tu nombre es importante para nosotros';
-    else if (value.length < 3) errors.nombre = 'Por favor ingresa tu nombre completo';
-    else delete errors.nombre;
-    break;
+      case 'nombre':
+        if (!value) errors.nombre = 'Tu nombre es importante para nosotros';
+        else if (value.trim().length < 3) errors.nombre = 'Por favor ingresa tu nombre completo';
+        else delete errors.nombre;
+        break;
 
-  case 'edad':
-    if (!value) errors.edad = 'Necesitamos saber tu edad para preparar mejor el evento';
-    else if (value < 13 || value > 100) errors.edad = 'Por favor verifica tu edad';
-    else delete errors.edad;
-    break;
+      case 'edad':
+        if (!value) errors.edad = 'Necesitamos saber tu edad';
+        else if (Number(value) < 13 || Number(value) > 100) errors.edad = 'Por favor verifica tu edad';
+        else delete errors.edad;
+        break;
 
-  case 'congregacion':
-    if (formData.esBautizado === 'si' && !value) {
-      errors.congregacion = 'Nos encantaría conocer tu congregación';
-    } else delete errors.congregacion;
-    break;
+      case 'congregacion':
+        if (!value) errors.congregacion = 'Nos encantaría conocer tu congregación';
+        else delete errors.congregacion;
+        break;
 
-  default:
-    // No hacer nada o log opcional:
-    // console.warn(`Campo no reconocido: ${name}`);
-    break;
-}
-    
+      case 'ciudad':
+        if (!value) errors.ciudad = 'Indícanos tu ciudad';
+        else delete errors.ciudad;
+        break;
 
-    
+      case 'talleresPrioridad': {
+        const vals = Object.values(value || {});
+        const filled = vals.filter(Boolean);
+        const duplicates = new Set(filled).size !== filled.length;
+        const allRanked = ['1','2','3','4','5'].every(r => filled.includes(r));
+        if (duplicates || !allRanked) {
+          errors.talleresPrioridad = 'Elige prioridades únicas del 1 al 5';
+        } else {
+          delete errors.talleresPrioridad;
+        }
+        break;
+      }
+
+
+      case 'diaLlegada':
+        if (!value) errors.diaLlegada = 'Selecciona tu día de llegada';
+        else delete errors.diaLlegada;
+        break;
+
+      case 'necesitaHospedaje':
+        if (!value) errors.necesitaHospedaje = 'Indícanos si necesitas hospedaje';
+        else delete errors.necesitaHospedaje;
+        break;
+
+      default:
+        break;
+    }
+
     setFormErrors(errors);
   };
+
 
   // Contador regresivo
   useEffect(() => {
@@ -207,61 +273,75 @@ const AgapeEventPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleInputChange = useCallback((name, value) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
-    setTouchedFields(prev => ({ ...prev, [name]: true }));
-    validateField(name, value);
-  }, [formData.esBautizado]);
+  const handleInputChange = useCallback((name, value, extraKey) => {
+    setTouchedFields(prev => ({ ...prev, [extraKey || name]: true }));
+
+    setFormData(prev => {
+      if (name === 'talleresPrioridad') {
+        const next = { ...prev.talleresPrioridad };
+        next[extraKey] = value;
+
+        if (value) {
+          for (const k of Object.keys(next)) {
+            if (k !== extraKey && next[k] === value) next[k] = '';
+          }
+        }
+
+        const updated = { ...prev, talleresPrioridad: next };
+        setTimeout(() => validateField('talleresPrioridad', next), 0);
+        return updated;
+      }
+
+      const updated = { ...prev, [name]: value };
+      setTimeout(() => validateField(name, value), 0);
+      return updated;
+    });
+  }, []);
+
+
 
   const handleSubmit = useCallback(async () => {
-    // Validación completa
-    const requiredFields = ['nombre', 'esBautizado', 'edad', 'necesitaHospedaje'];
-    let hasErrors = false;
+    // Requeridos base
+    const requiredFields = ['nombre', 'esBautizado', 'congregacion', 'ciudad', 'edad', 'necesitaHospedaje', 'diaLlegada'];
 
+    let hasErrors = false;
     requiredFields.forEach(field => {
-      if (!formData[field]) {
+      const val = formData[field];
+      if (!val) {
         hasErrors = true;
-        validateField(field, formData[field]);
+        validateField(field, val);
       }
     });
 
-    if (formData.esBautizado === 'si' && (!formData.congregacion || !formData.ciudadMexico)) {
-      hasErrors = true;
-      alert('Por favor completa la información de tu congregación y ciudad');
-      return;
-    }
-
-    if (formData.esBautizado === 'no' && (!formData.pais || !formData.ciudad)) {
-      hasErrors = true;
-      alert('Por favor completa la información de tu país y ciudad');
-      return;
-    }
+    // Talleres: deben ser 1..5 únicos
+    validateField('talleresPrioridad', formData.talleresPrioridad);
+    if (formErrors.talleresPrioridad) hasErrors = true;
 
     if (hasErrors) {
-      alert('Por favor completa todos los campos requeridos correctamente');
+      alert('Por favor completa los campos requeridos correctamente');
       return;
     }
 
-    // Simulación de envío exitoso
     console.log('Datos enviados:', formData);
     setShowThankYou(true);
-    
+
     setTimeout(() => {
       setShowThankYou(false);
       setFormData({
         nombre: '',
         esBautizado: '',
         congregacion: '',
-        ciudadMexico: '',
-        pais: '',
         ciudad: '',
         edad: '',
-        necesitaHospedaje: ''
+        necesitaHospedaje: '',
+        talleresPrioridad: { evangelismo:'', homiletica:'', musica:'', ninos:'', visitantes:'' },
+        diaLlegada: '',
       });
       setTouchedFields({});
       setFormErrors({});
     }, 5000);
-  }, [formData]);
+  }, [formData, formErrors]);
+
 
   const galleryImages = useMemo(() => [
     { id: 1, title: 'Adoración Poderosa', color: 'from-blue-400 to-purple-600' },
@@ -307,10 +387,17 @@ const AgapeEventPage = () => {
 
   // Cálculo del progreso del formulario
   const formProgress = useMemo(() => {
-    const totalFields = formData.esBautizado === 'si' ? 6 : formData.esBautizado === 'no' ? 6 : 4;
-    const filledFields = Object.values(formData).filter(value => value !== '').length;
-    return (filledFields / totalFields) * 100;
+    const filledBase = requiredBase.reduce((acc, key) => acc + (formData[key] ? 1 : 0), 0);
+    const talleresOk = isTalleresComplete(formData.talleresPrioridad) ? 1 : 0;
+
+    const total = requiredBase.length + 1; // +1 talleres
+    const filled = filledBase + talleresOk;
+
+    const pct = Math.round((filled / total) * 100);
+    return Math.min(100, pct);
   }, [formData]);
+
+
 
   if (showIntro) {
   return (
@@ -360,6 +447,7 @@ const AgapeEventPage = () => {
             {/* Menú desktop */}
             <div className="hidden md:flex items-center space-x-6">
               {[
+                { name: 'Panel de Preguntas', id: 'panel-preguntas', icon: MessageSquare },
                 { name: 'Registro', id: 'registro', icon: Send },
                 { name: 'Sobre ÁGAPE', id: 'sobre-agape', icon: Heart },
                 { name: 'Galería', id: 'galeria', icon: Star },
@@ -396,6 +484,7 @@ const AgapeEventPage = () => {
                 </p>
               </div>
               {[
+                { name: 'Panel de Preguntas', id: 'panel-preguntas', icon: MessageSquare },
                 { name: 'Registro', id: 'registro', icon: Send },
                 { name: 'Sobre ÁGAPE', id: 'sobre-agape', icon: Heart },
                 { name: 'Galería', id: 'galeria', icon: Star },
@@ -512,6 +601,8 @@ const AgapeEventPage = () => {
         </div>
       </section>
 
+      <PanelPreguntas />
+
       {/* Sección de Registro mejorada */}
       <section id="registro" className="relative z-20 py-16 px-4 bg-gradient-to-br from-blue-50/50 to-yellow-50/50">
         <div className="container mx-auto max-w-2xl">
@@ -621,7 +712,7 @@ const AgapeEventPage = () => {
                 </div>
 
                 {/* Campos condicionales para bautizados con animación */}
-                {formData.esBautizado === 'si' && (
+                {formData.esBautizado && (
                   <div className="space-y-6 animate-fadeIn">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -646,54 +737,28 @@ const AgapeEventPage = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        ¿De qué ciudad de México eres? *
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.ciudadMexico}
-                        onChange={(e) => handleInputChange('ciudadMexico', e.target.value)}
-                        className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-all duration-200"
-                        placeholder="Tu ciudad"
-                        aria-label="Ciudad de México"
-                        aria-required="true"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Campos condicionales para no bautizados con animación */}
-                {formData.esBautizado === 'no' && (
-                  <div className="space-y-6 animate-fadeIn">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        ¿De qué país eres? *
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.pais}
-                        onChange={(e) => handleInputChange('pais', e.target.value)}
-                        className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-all duration-200"
-                        placeholder="Tu país"
-                        aria-label="País"
-                        aria-required="true"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
                         ¿De qué ciudad eres? *
                       </label>
                       <input
                         type="text"
                         value={formData.ciudad}
                         onChange={(e) => handleInputChange('ciudad', e.target.value)}
-                        className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-all duration-200"
+                        className={`w-full px-5 py-4 rounded-xl border-2 ${
+                          touchedFields.ciudad && formErrors.ciudad
+                            ? 'border-red-300 focus:border-red-500'
+                            : 'border-gray-200 focus:border-blue-500'
+                        } focus:outline-none transition-all duration-200`}
                         placeholder="Tu ciudad"
                         aria-label="Ciudad"
                         aria-required="true"
                       />
+                      {touchedFields.ciudad && formErrors.ciudad && (
+                        <p className="mt-1 text-sm text-red-600">{formErrors.ciudad}</p>
+                      )}
                     </div>
                   </div>
                 )}
+
 
                 {/* Campo Edad con validación inteligente */}
                 <div>
@@ -763,10 +828,72 @@ const AgapeEventPage = () => {
                   </div>
                   {formData.necesitaHospedaje === 'si' && (
                     <p className="mt-2 text-sm text-blue-600 animate-fadeIn">
-                      Te conseguiremos un lugar cómodo con hermanos de la iglesia local 🏠
+                      Necesitas hospedaje 🏠 — 
+                      <a 
+                        href="https://wa.me/5218661234567" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="font-semibold underline hover:text-blue-800"
+                      >
+                        contacta a este número
+                      </a>
                     </p>
                   )}
                 </div>
+                {/* Talleres: prioridad del 1 al 5 */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Talleres (elige prioridad del 1 al 5, sin repetir) *
+                  </label>
+
+                  <div className="grid gap-3">
+                    {TALLERES.map(t => (
+                      <div key={t.key} className="flex items-center justify-between bg-white rounded-xl border-2 border-gray-200 px-4 py-3">
+                        <span className="text-gray-700 text-sm md:text-base">{t.label}</span>
+                        <select
+                          value={formData.talleresPrioridad[t.key]}
+                          onChange={(e) => handleInputChange('talleresPrioridad', e.target.value, t.key)}
+                          className="ml-4 px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-blue-500 outline-none"
+                        >
+                          {OPCIONES_RANK.map(opt => (
+                            <option key={opt} value={opt}>{opt === '' ? '—' : opt}</option>
+                          ))}
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+
+                  {formErrors.talleresPrioridad && (
+                    <p className="mt-1 text-sm text-red-600">{formErrors.talleresPrioridad}</p>
+                  )}
+                </div>
+                {/* Día de llegada */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Día de llegada *
+                  </label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {['viernes','sabado'].map(op => (
+                      <button
+                        key={op}
+                        onClick={() => handleInputChange('diaLlegada', op)}
+                        className={`px-6 py-4 rounded-xl border-2 font-medium transition-all duration-200 ${
+                          formData.diaLlegada === op
+                            ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-lg scale-105'
+                            : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                        }`}
+                        aria-pressed={formData.diaLlegada === op}
+                      >
+                        {op === 'viernes' ? 'Viernes' : 'Sábado'}
+                      </button>
+                    ))}
+                  </div>
+                  {touchedFields.diaLlegada && formErrors.diaLlegada && (
+                    <p className="mt-1 text-sm text-red-600">{formErrors.diaLlegada}</p>
+                  )}
+                </div>
+
+
 
                 {/* Mensaje motivacional dinámico */}
                 {formProgress > 50 && (
@@ -780,13 +907,18 @@ const AgapeEventPage = () => {
                 {/* Botón de envío mejorado */}
                 <button
                   onClick={handleSubmit}
-                  className="w-full py-5 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-xl flex items-center justify-center space-x-2 group"
+                  disabled={formProgress < 100}
+                  className={`w-full py-5 font-bold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 group
+                    ${formProgress < 100
+                      ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-xl hover:shadow-2xl'}`}
                   aria-label="Completar registro"
                 >
-                  <span className="text-lg">Completar mi Registro</span>
+                  <span className="text-lg">
+                    {formProgress < 100 ? `Completa los campos (${formProgress}%)` : 'Completar mi Registro'}
+                  </span>
                   <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
-
                 <div className="text-center space-y-2">
                   <p className="text-xs text-gray-500">
                     * Campos obligatorios. Tu información está segura con nosotros.
@@ -951,6 +1083,8 @@ const AgapeEventPage = () => {
           </div>
         </div>
       </section>
+
+      <AudiosHimnos />
 
       {/* Preguntas Frecuentes mejoradas */}
       <section id="faq" className="relative z-20 py-16 px-4">
