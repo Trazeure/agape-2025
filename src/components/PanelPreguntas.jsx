@@ -5,27 +5,56 @@ const PanelPreguntas = () => {
   const [pregunta, setPregunta] = useState('');
   const [nombre, setNombre] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e) => {
+  // URL del Apps Script (define REACT_APP_SHEETS_ENDPOINT en .env.local o en Vercel)
+  const SHEETS_ENDPOINT = process.env.REACT_APP_SHEETS_ENDPOINT;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (pregunta.trim() && nombre.trim()) {
-      // Aquí se enviaría la pregunta al servidor/base de datos
-      console.log('Pregunta enviada:', { nombre, pregunta });
-      
+
+    if (!pregunta.trim() || !nombre.trim()) return;
+
+    if (!SHEETS_ENDPOINT) {
+      alert('No se encontró REACT_APP_SHEETS_ENDPOINT. Configúralo en .env.local o en Vercel.');
+      return;
+    }
+
+    try {
+      setSending(true);
+
+      // Payload para la pestaña "Preguntas"
+      const payload = { form: 'pregunta', nombre, pregunta };
+
+      // DEBUG opcional: confirma que el form es "pregunta" y la URL es la correcta
+      console.log('[Panel payload]', payload);
+      console.log('[Endpoint]', SHEETS_ENDPOINT);
+
+      // Fire-and-forget para esquivar CORS (no intentes leer la respuesta)
+      await fetch(SHEETS_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload),
+      });
+
+      // UX de éxito
       setPregunta('');
       setNombre('');
       setShowSuccess(true);
-      
-      setTimeout(() => {
-        setShowSuccess(false);
-      }, 3000);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (err) {
+      console.error('[ERROR envío pregunta]', err);
+      alert('No pude enviar tu pregunta. Inténtalo de nuevo.');
+    } finally {
+      setSending(false);
     }
   };
 
   return (
     <section id="panel-preguntas" className="relative z-20 py-16 px-4 bg-gradient-to-br from-purple-50 to-blue-50">
       <div className="container mx-auto max-w-6xl">
-        {/* Header de la sección */}
+        {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl mb-6">
             <MessageSquare className="w-8 h-8 text-white" />
@@ -34,7 +63,7 @@ const PanelPreguntas = () => {
             Panel de Preguntas
           </h3>
           <p className="text-xl text-gray-600 mb-2">
-            Dejanos tus dudas para el panel de preguntas
+            Déjanos tus dudas para el panel de preguntas
           </p>
           <div className="bg-white rounded-xl p-4 max-w-md mx-auto shadow-lg">
             <p className="text-sm font-medium text-purple-700 mb-1">Versículo:</p>
@@ -46,7 +75,7 @@ const PanelPreguntas = () => {
         </div>
 
         <div className="max-w-4xl mx-auto">
-          {/* Formulario centrado para enviar preguntas */}
+          {/* Formulario */}
           <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-gray-100">
             <div className="text-center mb-8">
               <h4 className="text-3xl font-bold text-gray-800 mb-3 flex items-center justify-center">
@@ -57,7 +86,7 @@ const PanelPreguntas = () => {
                 Tus preguntas serán respondidas durante el evento por nuestros líderes
               </p>
             </div>
-            
+
             {showSuccess ? (
               <div className="text-center py-12 animate-fadeIn">
                 <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
@@ -112,11 +141,11 @@ const PanelPreguntas = () => {
 
                 <button
                   type="submit"
-                  disabled={!pregunta.trim() || !nombre.trim() || pregunta.length > 300}
+                  disabled={sending || !pregunta.trim() || !nombre.trim() || pregunta.length > 300}
                   className="w-full py-5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-xl transition-all duration-200 flex items-center justify-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 shadow-xl hover:shadow-2xl text-lg"
                 >
                   <Send className="w-6 h-6" />
-                  <span>Enviar mi Pregunta</span>
+                  <span>{sending ? 'Enviando…' : 'Enviar mi Pregunta'}</span>
                 </button>
 
                 <div className="grid md:grid-cols-2 gap-4 mt-8">

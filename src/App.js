@@ -24,6 +24,20 @@ const AgapeEventPage = () => {
     diaLlegada: ''
   });
 
+  const galleryImages = useMemo(() => [
+    { id: 1, title: 'Adoración Poderosa', color: 'from-blue-400 to-purple-600' },
+    { id: 2, title: 'Comunión Hermosa',   color: 'from-yellow-400 to-orange-600' },
+    { id: 3, title: 'Enseñanza Transformadora', color: 'from-green-400 to-blue-600' },
+    { id: 4, title: 'Momentos de Oración', color: 'from-purple-400 to-pink-600' },
+    { id: 5, title: 'Juventud Unida',      color: 'from-red-400 to-yellow-600' },
+    { id: 6, title: 'Celebración Gozosa',  color: 'from-indigo-400 to-blue-600' }
+  ], []);
+
+  const buildPayload = () => ({
+    form: 'registro',   // campo obligatorio para que tu Apps Script sepa a qué hoja mandar los datos
+    ...formData         // todo lo que has llenado en tu formulario (nombre, ciudad, edad, etc.)
+  });
+
   // Talleres
   const TALLERES = [
     { key: 'evangelismo', label: '1) Cómo salvar un alma (Evangelismo)' },
@@ -69,6 +83,11 @@ const AgapeEventPage = () => {
   const animationRef = useRef(null);
   const [showIntro, setShowIntro] = useState(true);
   const [introComplete, setIntroComplete] = useState(false);
+
+  // Endpoint
+  const SHEETS_ENDPOINT = process.env.REACT_APP_SHEETS_ENDPOINT;
+  const [submitting, setSubmitting] = useState(false);
+
 
   // Versículos bíblicos
   const bibleVerses = [
@@ -298,13 +317,13 @@ const AgapeEventPage = () => {
     });
   }, []);
 
-
-
+  //Sumbit
+  
   const handleSubmit = useCallback(async () => {
-    // Requeridos base
+    // Validaciones existentes
     const requiredFields = ['nombre', 'esBautizado', 'congregacion', 'ciudad', 'edad', 'necesitaHospedaje', 'diaLlegada'];
-
     let hasErrors = false;
+
     requiredFields.forEach(field => {
       const val = formData[field];
       if (!val) {
@@ -313,7 +332,6 @@ const AgapeEventPage = () => {
       }
     });
 
-    // Talleres: deben ser 1..5 únicos
     validateField('talleresPrioridad', formData.talleresPrioridad);
     if (formErrors.talleresPrioridad) hasErrors = true;
 
@@ -322,35 +340,55 @@ const AgapeEventPage = () => {
       return;
     }
 
-    console.log('Datos enviados:', formData);
-    setShowThankYou(true);
+    if (!SHEETS_ENDPOINT) {
+      alert('No se encontró REACT_APP_SHEETS_ENDPOINT. Configúralo en .env.local o en Vercel.');
+      return;
+    }
 
-    setTimeout(() => {
-      setShowThankYou(false);
-      setFormData({
-        nombre: '',
-        esBautizado: '',
-        congregacion: '',
-        ciudad: '',
-        edad: '',
-        necesitaHospedaje: '',
-        talleresPrioridad: { evangelismo:'', homiletica:'', musica:'', ninos:'', visitantes:'' },
-        diaLlegada: '',
+    try {
+      setSubmitting(true);
+
+      const payload = { form: 'registro', ...formData };
+
+      // Fire-and-forget: no leemos la respuesta (evita CORS/redirects)
+      await fetch(SHEETS_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload),
       });
-      setTouchedFields({});
-      setFormErrors({});
-    }, 5000);
-  }, [formData, formErrors]);
+
+      // Si llegamos aquí, asumimos éxito
+      setShowThankYou(true);
+
+      setTimeout(() => {
+        setShowThankYou(false);
+        setFormData({
+          nombre: '',
+          esBautizado: '',
+          congregacion: '',
+          ciudad: '',
+          edad: '',
+          necesitaHospedaje: '',
+          talleresPrioridad: { evangelismo: '', homiletica: '', musica: '', ninos: '', visitantes: '' },
+          diaLlegada: '',
+        });
+        setTouchedFields({});
+        setFormErrors({});
+      }, 5000);
+
+    } catch (err) {
+      console.error('[ERROR envío]', err);
+      alert('Ocurrió un problema al guardar tu registro. Inténtalo de nuevo.');
+    } finally {
+      setSubmitting(false);
+    }
+  }, [formData, formErrors, SHEETS_ENDPOINT]);
 
 
-  const galleryImages = useMemo(() => [
-    { id: 1, title: 'Adoración Poderosa', color: 'from-blue-400 to-purple-600' },
-    { id: 2, title: 'Comunión Hermosa', color: 'from-yellow-400 to-orange-600' },
-    { id: 3, title: 'Enseñanza Transformadora', color: 'from-green-400 to-blue-600' },
-    { id: 4, title: 'Momentos de Oración', color: 'from-purple-400 to-pink-600' },
-    { id: 5, title: 'Juventud Unida', color: 'from-red-400 to-yellow-600' },
-    { id: 6, title: 'Celebración Gozosa', color: 'from-indigo-400 to-blue-600' }
-  ], []);
+  
+
+  
 
   const faqs = useMemo(() => [
     {
@@ -907,18 +945,23 @@ const AgapeEventPage = () => {
                 {/* Botón de envío mejorado */}
                 <button
                   onClick={handleSubmit}
-                  disabled={formProgress < 100}
+                  disabled={formProgress < 100 || submitting}
                   className={`w-full py-5 font-bold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 group
-                    ${formProgress < 100
+                    ${formProgress < 100 || submitting
                       ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                       : 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-xl hover:shadow-2xl'}`}
                   aria-label="Completar registro"
                 >
                   <span className="text-lg">
-                    {formProgress < 100 ? `Completa los campos (${formProgress}%)` : 'Completar mi Registro'}
+                    {submitting
+                      ? 'Enviando...'
+                      : formProgress < 100
+                        ? `Completa los campos (${formProgress}%)`
+                        : 'Completar mi Registro'}
                   </span>
                   <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
+
                 <div className="text-center space-y-2">
                   <p className="text-xs text-gray-500">
                     * Campos obligatorios. Tu información está segura con nosotros.
