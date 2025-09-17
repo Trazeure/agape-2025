@@ -8,7 +8,7 @@ const PasosDeFe = () => {
   const [typedText, setTypedText] = useState('');
   const [footstepOpacity, setFootstepOpacity] = useState([0, 0, 0, 0, 0]);
   
-  const verse = '"Porque por fe andamos, no por vista." — 2 Corintios 5:7';
+  const verse = '"Esta es la victoria que ha vencido al mundo, nuestra fe" — 1 Juan 5:4';
   
   useEffect(() => {
     // Animación más suave con delays progresivos
@@ -185,16 +185,6 @@ const PasosDeFe = () => {
           </span>
         </h1>
         
-        {/* Subtítulo */}
-        <p 
-          className="text-xl text-gray-600 mb-8 transition-all duration-1500 ease-out delay-300"
-          style={{
-            opacity: animationStage >= 2 ? 1 : 0,
-            transform: animationStage >= 2 ? 'translateY(0)' : 'translateY(20px)'
-          }}
-        >
-          Un caminar de transformación y esperanza
-        </p>
         
         {/* Versículo bíblico con efecto de tipeo más sutil */}
         <div 
@@ -241,7 +231,7 @@ const PasosDeFe = () => {
           }}
         >
           <p className="text-sm text-gray-500">
-            Preparándote para un encuentro transformador...
+            Dios te bendiga!
           </p>
         </div>
       </div>

@@ -5,6 +5,14 @@ import logoPrincipal from './assets/logoprincipal.jpg';
 import agape from './assets/agape.jpg';
 import PanelPreguntas from './components/PanelPreguntas';
 import AudiosHimnos from './components/AudiosHimnos';
+import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
+import m1 from './assets/moment1.jpeg';
+import m2 from './assets/moment2.jpeg';
+import m3 from './assets/moment3.jpeg';
+import m4 from './assets/moment4.jpeg';
+import m5 from './assets/moment5.jpeg';
+import m6 from './assets/moment6.jpeg';
+
 
 const AgapeEventPage = () => {
   const [formData, setFormData] = useState({
@@ -25,16 +33,17 @@ const AgapeEventPage = () => {
   });
 
   const galleryImages = useMemo(() => [
-    { id: 1, title: 'Adoración Poderosa', color: 'from-blue-400 to-purple-600' },
-    { id: 2, title: 'Comunión Hermosa',   color: 'from-yellow-400 to-orange-600' },
-    { id: 3, title: 'Enseñanza Transformadora', color: 'from-green-400 to-blue-600' },
-    { id: 4, title: 'Momentos de Oración', color: 'from-purple-400 to-pink-600' },
-    { id: 5, title: 'Juventud Unida',      color: 'from-red-400 to-yellow-600' },
-    { id: 6, title: 'Celebración Gozosa',  color: 'from-indigo-400 to-blue-600' }
+    { id: 1, src: m1, alt: 'Jóvenes adorando en ÁGAPE' },
+    { id: 2, src: m2, alt: 'Convivio entre asistentes' },
+    { id: 3, src: m3, alt: 'Predicación y estudio bíblico' },
+    { id: 4, src: m4, alt: 'Tiempo de oración en grupo' },
+    { id: 5, src: m5, alt: 'Jóvenes reunidos celebrando' },
+    { id: 6, src: m6, alt: 'Alabanza y celebración' },
   ], []);
 
+
   const buildPayload = () => ({
-    form: 'registro',   // campo obligatorio para que tu Apps Script sepa a qué hoja mandar los datos
+    form: 'registro',   // campo oatorio para que tu Apps Script sepa a qué hoja mandar los datos
     ...formData         // todo lo que has llenado en tu formulario (nombre, ciudad, edad, etc.)
   });
 
@@ -393,22 +402,22 @@ const AgapeEventPage = () => {
   const faqs = useMemo(() => [
     {
       question: '¿Cuándo es el evento ÁGAPE?',
-      answer: 'El evento se llevará a cabo del 12 al 13 de diciembre de 2025. Comenzamos el viernes a las 6:00 PM con una poderosa sesión de alabanza y concluimos el sábado a las 9:00 PM después de un tiempo especial de ministración.',
+      answer: 'Agape se llevará a cabo los dias  12 y 13 de Diciembre de 2025. Comenzamos el viernes a las 4:00 pm  y el dia sábado iniciamos a las 8:00 am con el desayuno.',
       icon: Calendar
     },
     {
       question: '¿Dónde será el evento?',
-      answer: 'El evento será en Monclova, Coahuila, en el Centro de Convenciones. La dirección exacta y mapa se enviará por correo a todos los registrados una semana antes del evento.',
+      answer: 'Agape se lleva acabo en Monclova, Coahuila, en el Centro de Convenciones. La dirección exacta y mapa se publicara en nuestras redes sociales',
       icon: MapPin
     },
     {
-      question: '¿Hay algún costo de inscripción?',
-      answer: 'No, el evento es completamente gratuito como muestra del amor de Dios. Las comidas están incluidas. Solo pedimos que traigas un corazón dispuesto a recibir.',
+      question: '¿Que actividades tendremos?',
+      answer: 'Tendremos predicaciones, distintos talleres, dinamicas y mas... ',
       icon: Heart
     },
     {
       question: '¿Qué debo llevar?',
-      answer: 'Te recomendamos llevar tu Biblia, libreta de notas, ropa cómoda para dos días, y si necesitas hospedaje, artículos de higiene personal. También trae expectativa y apertura para lo que Dios quiere hacer.',
+      answer: 'Te recomendamos llevar tu Biblia, libreta de notas, ropa abrigada para el clima, y si necesitas hospedaje, artículos de higiene personal.',
       icon: Users
     }
   ], []);
@@ -579,7 +588,7 @@ const AgapeEventPage = () => {
           </h2>
 
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto animate-fadeInUp animation-delay-200">
-            Un encuentro transformador de amor y hermandad que cambiará tu vida para siempre
+            Esta pagina esta hecha para ti con amor.
           </p>
 
           {/* Versículo bíblico rotativo */}
@@ -612,7 +621,7 @@ const AgapeEventPage = () => {
               <MapPin className="w-5 h-5 mr-2 text-yellow-500" /> Monclova, Coahuila
             </span>
             <span className="flex items-center bg-white/90 backdrop-blur rounded-full px-5 py-3 shadow-lg hover:shadow-xl transition-shadow">
-              <Users className="w-5 h-5 mr-2 text-purple-500" /> Limitado a 300 personas
+              <Users className="w-5 h-5 mr-2 text-purple-500" /> Todos son bienvenidos
             </span>
           </div>
 
@@ -630,7 +639,7 @@ const AgapeEventPage = () => {
               <Shield className="w-4 h-4 mr-1" /> 100% Seguro
             </span>
             <span className="flex items-center">
-              <CheckCircle className="w-4 h-4 mr-1" /> Registro Gratuito
+              <CheckCircle className="w-4 h-4 mr-1" /> Registrate
             </span>
             <span className="flex items-center">
               <Heart className="w-4 h-4 mr-1" /> Con Amor
@@ -671,9 +680,9 @@ const AgapeEventPage = () => {
                 <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
                   <CheckCircle className="w-12 h-12 text-white" />
                 </div>
-                <h4 className="text-3xl font-bold text-gray-800 mb-3">¡Aleluya, Registro Exitoso!</h4>
+                <h4 className="text-3xl font-bold text-gray-800 mb-3">¡Registro Exitoso!</h4>
                 <p className="text-lg text-gray-600 mb-2">Dios tiene grandes planes para ti en ÁGAPE 2025</p>
-                <p className="text-sm text-gray-500">Te enviaremos toda la información a tu correo pronto</p>
+                <p className="text-sm text-gray-500">Te esperamos</p>
                 <div className="mt-6 p-4 bg-blue-50 rounded-xl">
                   <p className="text-blue-700 font-medium">
                     "El Señor te bendiga y te guarde" - Números 6:24
@@ -744,7 +753,7 @@ const AgapeEventPage = () => {
                   </div>
                   {formData.esBautizado === 'no' && (
                     <p className="mt-2 text-sm text-blue-600 animate-fadeIn">
-                      ¡Qué bendición! Este evento será perfecto para ti 🙏
+                      Este evento será perfecto para ti 🙏
                     </p>
                   )}
                 </div>
@@ -981,30 +990,30 @@ const AgapeEventPage = () => {
       <section id="sobre-agape" className="relative z-20 py-16 px-4">
         <div className="container mx-auto max-w-5xl text-center">
           <h3 className="text-4xl md:text-5xl font-bold mb-4 text-gray-800">¿Qué es ÁGAPE?</h3>
-          <p className="text-xl text-gray-600 mb-12">Descubre el verdadero significado del amor divino</p>
+          <p className="text-xl text-gray-600 mb-12">Elegimos el nombre Agape por su significado...</p>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
               {
                 icon: Heart,
                 title: 'Amor Incondicional',
-                description: 'Experimenta el amor de Dios manifestado en cada momento de adoración y comunión',
+                description: 'El amor ágape está referido al amor de Dios. Su naturaleza está hecha de amor, sus actos están regulados por el amor. Dios ama de manera incondicional',
                 color: 'from-red-400 to-pink-600',
-                verse: 'Juan 3:16'
+                verse: '1 Juan 4:8,10'
               },
               {
                 icon: Users,
-                title: 'Hermandad Genuina',
-                description: 'Conecta con jóvenes que comparten tu pasión por Cristo y el deseo de crecer',
+                title: 'Amor sacrificial',
+                description: 'Es un amor desinteresado, altruista, abnegado, sacrificial. es un amor maduro que moviliza a la entrega, a la compasión, a la tolerancia, a la comprensión y al perdón',
                 color: 'from-blue-400 to-purple-600',
-                verse: 'Hechos 2:44'
+                verse: 'Romanos 5:5'
               },
               {
                 icon: Star,
-                title: 'Transformación',
-                description: 'Vive dos días que marcarán un antes y después en tu caminar con Dios',
+                title: 'Amor en Cristo',
+                description: 'Como hijos de Dios elegimos amar de esta manera, busca el bien del otro sin esperar nada a cambio ',
                 color: 'from-yellow-400 to-orange-600',
-                verse: '2 Corintios 5:17'
+                verse: ' Juan 3:18'
               }
             ].map((item, index) => (
               <div key={index} className="group">
@@ -1025,10 +1034,9 @@ const AgapeEventPage = () => {
           <div className="bg-gradient-to-br from-blue-50 to-yellow-50 rounded-3xl p-10 md:p-16 shadow-xl">
             <div className="max-w-3xl mx-auto">
               <p className="text-xl text-gray-700 leading-relaxed mb-8">
-                ÁGAPE es más que un evento, es un <span className="font-bold text-blue-600">encuentro transformador</span> donde 
-                el amor de Dios se manifiesta poderosamente. Durante dos días intensos, 
-                experimentarás <span className="font-bold text-yellow-600">adoración profunda</span>, enseñanzas que 
-                cambiarán tu perspectiva y conexiones genuinas con hermanos de toda la república.
+                Este año tenemos como propósito que nuestra fe se fortalezca, por lo que elegimos el tema: 
+                <span className="font-bold text-blue-500 mb-3">Pasos de fe</span> basado en 1 Juan 5:4 ...esta es la victoria que ha vencido al mundo, nuestra fe
+                Al decir <span className="font-bold text-yellow-500 mb-3">"pasos de fe"</span> nos referimos a ese salto de tu zona de confort al llamamiento de trabajar y conocer la obra del Señor.
               </p>
               
               <div className="grid md:grid-cols-2 gap-6 mb-8">
@@ -1045,10 +1053,8 @@ const AgapeEventPage = () => {
               </div>
               
               <p className="text-xl text-gray-700 leading-relaxed">
-                Únete a cientos de jóvenes que buscan <span className="font-bold text-purple-600">crecer en su fe</span>, 
-                servir con pasión y construir relaciones que trascienden. En ÁGAPE, descubrirás que el 
-                <span className="font-bold text-red-600"> amor incondicional</span> no es solo una teoría, 
-                sino una realidad tangible que cambiará tu vida.
+                Los últimos años se nos ha expuesto la necesidad de esforzarnos en la obra y ser ejemplo desde nuestra juventud, pero ¿Cómo podemos trabajar si no conocemos las doctrinas básicas en el cristianismo?
+                Es por eso que nos gustaría que este año se expusieran temas de conocimiento básico para el joven cristiano y de esa manera aumentar nuestro entendimiento y fe en Dios para así cumplir nuestra función como jóvenes <span className="font-bold text-red-500 mb-3">CRISTIANOS</span>.
               </p>
             </div>
           </div>
@@ -1076,13 +1082,19 @@ const AgapeEventPage = () => {
                     index === currentImageIndex ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
                   }`}
                 >
-                  <div className={`w-full h-full bg-gradient-to-br ${img.color} flex items-center justify-center`}>
-                    <div className="text-center text-white p-8">
-                      <Star className="w-16 h-16 mx-auto mb-4 opacity-80 animate-pulse" />
-                      <h4 className="text-3xl font-bold mb-2">{img.title}</h4>
-                      <p className="text-lg opacity-90">Momento especial #{img.id}</p>
+                  {/* Carrusel principal mejorado */}
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                    <div className="text-center text-white p-6">
+                      <h4 className="text-3xl font-bold mb-2 drop-shadow">{img.title}</h4>
                     </div>
                   </div>
+
+
                 </div>
               ))}
 
@@ -1115,8 +1127,14 @@ const AgapeEventPage = () => {
                 }`}
                 aria-label={`Seleccionar ${img.title}`}
               >
-                <div className={`w-full h-32 bg-gradient-to-br ${img.color} flex items-center justify-center`}>
-                  <Star className="w-8 h-8 text-white/80 group-hover:scale-125 transition-transform" />
+                {/* Grid de miniaturas mejorado */}
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="w-full h-32 object-cover"
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <p className="text-white text-sm font-medium px-2 text-center">{img.title}</p>
                 </div>
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <p className="text-white text-sm font-medium px-2 text-center">{img.title}</p>
@@ -1205,7 +1223,7 @@ const AgapeEventPage = () => {
               ¿Listo para vivir ÁGAPE?
             </h3>
             <p className="text-xl mb-8 opacity-90 animate-fadeInUp animation-delay-200">
-              No te pierdas esta oportunidad única de experimentar el amor de Dios junto a cientos de jóvenes
+              Estamos felices de verte pronto,, oramos por sus planes! Dios los bendiga siempre.
             </p>
             <button
               onClick={() => scrollToSection('registro')}
@@ -1241,6 +1259,8 @@ const AgapeEventPage = () => {
       <footer className="relative z-20 bg-gray-900 text-white py-16 px-4">
         <div className="container mx-auto">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
+            
+            {/* Columna Logo + Social */}
             <div className="text-center md:text-left">
               <div className="flex items-center justify-center md:justify-start space-x-2 mb-4">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-yellow-400 rounded-xl flex items-center justify-center">
@@ -1248,20 +1268,41 @@ const AgapeEventPage = () => {
                 </div>
                 <h3 className="text-2xl font-bold">ÁGAPE 2025</h3>
               </div>
-              <p className="text-gray-400 mb-4">Un evento de amor y hermandad cristiana</p>
+              <p className="text-gray-400 mb-4">Dios te ama y nosotros también!</p>
+              
+              {/* Redes sociales */}
               <div className="flex justify-center md:justify-start space-x-4">
-                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors cursor-pointer">
-                  <span className="text-sm">f</span>
-                </div>
-                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors cursor-pointer">
-                  <span className="text-sm">ig</span>
-                </div>
-                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors cursor-pointer">
-                  <span className="text-sm">yt</span>
-                </div>
+                <a
+                  href="https://www.facebook.com/TU_PAGINA"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
+                  aria-label="Facebook"
+                >
+                  <FaFacebookF className="text-white w-4 h-4" />
+                </a>
+                <a
+                  href="https://www.instagram.com/TU_USUARIO"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-pink-500 transition-colors"
+                  aria-label="Instagram"
+                >
+                  <FaInstagram className="text-white w-4 h-4" />
+                </a>
+                <a
+                  href="https://www.youtube.com/TU_CANAL"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                  aria-label="YouTube"
+                >
+                  <FaYoutube className="text-white w-4 h-4" />
+                </a>
               </div>
             </div>
-            
+
+            {/* Columna Información */}
             <div className="text-center md:text-left">
               <h4 className="text-lg font-semibold mb-4">Información del Evento</h4>
               <div className="space-y-2 text-gray-400">
@@ -1275,11 +1316,12 @@ const AgapeEventPage = () => {
                 </p>
                 <p className="flex items-center justify-center md:justify-start">
                   <Heart className="w-4 h-4 mr-2" />
-                  Entrada Gratuita
+                  Ágape
                 </p>
               </div>
             </div>
-            
+
+            {/* Columna Enlaces rápidos */}
             <div className="text-center md:text-left">
               <h4 className="text-lg font-semibold mb-4">Enlaces Rápidos</h4>
               <div className="space-y-2">
@@ -1296,12 +1338,6 @@ const AgapeEventPage = () => {
                   Sobre ÁGAPE
                 </button>
                 <button 
-                  onClick={() => scrollToSection('testimonios')}
-                  className="block text-gray-400 hover:text-white transition-colors"
-                >
-                  Testimonios
-                </button>
-                <button 
                   onClick={() => scrollToSection('faq')}
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
@@ -1309,21 +1345,18 @@ const AgapeEventPage = () => {
                 </button>
               </div>
             </div>
-            
+
+            {/* Columna Contacto */}
             <div className="text-center md:text-right">
               <h4 className="text-lg font-semibold mb-4">Contacto</h4>
               <div className="space-y-2 text-gray-400">
                 <p>info@agape2025.com</p>
-                <p>+52 55 1234 5678</p>
-                <div className="mt-4">
-                  <p className="text-sm mb-2">Horario de atención:</p>
-                  <p className="text-xs">Lun-Vie: 9:00 AM - 6:00 PM</p>
-                  <p className="text-xs">Sábado: 10:00 AM - 2:00 PM</p>
-                </div>
+                <div className="mt-4" />
               </div>
             </div>
           </div>
-          
+
+          {/* Pie final */}
           <div className="border-t border-gray-800 pt-8">
             <div className="text-center">
               <p className="text-sm text-gray-500 mb-2">© 2025 ÁGAPE. Todos los derechos reservados.</p>
@@ -1338,6 +1371,7 @@ const AgapeEventPage = () => {
           </div>
         </div>
       </footer>
+
 
       <style jsx>{`
         @keyframes gradient {

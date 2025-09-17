@@ -163,7 +163,7 @@ const AudiosHimnos = () => {
             Audios de Himnos
           </h3>
           <p className="text-2xl text-gray-600 mb-6 font-light">
-            Eleva tu alma con estos hermosos himnos de adoración
+            Himnos de anteriores ediciones
           </p>
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 max-w-lg mx-auto shadow-xl border border-white/50">
             <p className="text-gray-700 font-semibold flex items-center justify-center text-lg">
@@ -273,11 +273,6 @@ const AudiosHimnos = () => {
               <Music className="w-7 h-7 mr-3 text-blue-600" />
               Disfruta estos himnos durante tu tiempo de reflexión
             </h5>
-            <p className="text-gray-600 text-lg leading-relaxed">
-              Cada himno ha sido seleccionado especialmente para preparar tu corazón para el encuentro ÁGAPE. 
-              Te recomendamos escucharlos en un ambiente de oración y meditación, permitiendo que sus melodías 
-              eleven tu espíritu hacia lo divino.
-            </p>
           </div>
         </div>
       </div>
