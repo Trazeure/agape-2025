@@ -83,7 +83,7 @@ const PanelPreguntas = () => {
                 Envía tu Pregunta
               </h4>
               <p className="text-gray-600">
-                Tus preguntas serán respondidas durante el evento por nuestros líderes
+                Tus preguntas serán respondidas durante el evento
               </p>
             </div>
 

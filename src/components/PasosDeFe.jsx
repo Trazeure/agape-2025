@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Footprints, Heart, Star, Shield, Users } from 'lucide-react';
-import logoPrincipal from '../assets/logoprincipal.jpg';
+import { Footprints, Heart, Shield, Users, Crown } from 'lucide-react';
 
 const PasosDeFe = () => {
   const [animationStage, setAnimationStage] = useState(0);
@@ -11,33 +10,34 @@ const PasosDeFe = () => {
   const verse = '"Esta es la victoria que ha vencido al mundo, nuestra fe" — 1 Juan 5:4';
   
   useEffect(() => {
-    // Animación más suave con delays progresivos
     const animateSteps = async () => {
-      // Mostrar la cruz de fondo suavemente
-      await new Promise(resolve => setTimeout(resolve, 300));
+      // Fase 1: Título aparece (2 segundos)
       setAnimationStage(1);
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Animar cada paso individualmente con transición suave
+      // Fase 2: Pasos aparecen uno por uno (3 segundos)
+      setAnimationStage(2);
       for (let i = 0; i < 5; i++) {
-        await new Promise(resolve => setTimeout(resolve, 400));
+        await new Promise(resolve => setTimeout(resolve, 300));
         setFootstepOpacity(prev => {
           const newOpacity = [...prev];
           newOpacity[i] = 1;
           return newOpacity;
         });
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
       
-      // Mostrar el título después de los pasos
-      await new Promise(resolve => setTimeout(resolve, 600));
-      setAnimationStage(2);
-      
-      // Iniciar el efecto de tipeo del versículo
+      // Fase 3: Esperar (1 segundo)
       await new Promise(resolve => setTimeout(resolve, 1000));
-      setAnimationStage(3);
       
-      // Transición final a la página principal
-      await new Promise(resolve => setTimeout(resolve, 100000));
-      setShowMainContent(true);
+      // Fase 4: Versículo con efecto de tipeo (3 segundos)
+      setAnimationStage(3);
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      // Fase 5: Transición a la página principal (1 segundo)
+      setTimeout(() => {
+        setShowMainContent(true);
+      }, 1000);
     };
     
     animateSteps();
@@ -53,264 +53,353 @@ const PasosDeFe = () => {
         } else {
           clearInterval(typeInterval);
         }
-      }, 40);
+      }, 35);
       
       return () => clearInterval(typeInterval);
     }
   }, [animationStage]);
   
   const footsteps = [
-    { id: 0, x: '15%', y: '75%', rotation: -15, delay: 0 },
-    { id: 1, x: '30%', y: '60%', rotation: 10, delay: 0.2 },
-    { id: 2, x: '50%', y: '45%', rotation: -5, delay: 0.4 },
-    { id: 3, x: '70%', y: '30%', rotation: 15, delay: 0.6 },
-    { id: 4, x: '85%', y: '15%', rotation: -10, delay: 0.8 }
+    { id: 0, x: '20%', y: '80%', rotation: -20, scale: 1.2 },
+    { id: 1, x: '35%', y: '65%', rotation: 15, scale: 1.0 },
+    { id: 2, x: '50%', y: '50%', rotation: -10, scale: 1.3 },
+    { id: 3, x: '65%', y: '35%', rotation: 25, scale: 1.1 },
+    { id: 4, x: '80%', y: '20%', rotation: -15, scale: 1.4 }
   ];
 
   if (showMainContent) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-yellow-50 flex items-center justify-center p-8">
-        <div className="text-center opacity-0 animate-smooth-fade-in">
-          <div className="mb-6">
-            <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-yellow-400 rounded-full p-0.5 mx-auto mb-6">
-              <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
-                <Heart className="w-16 h-16 text-blue-600" />
-              </div>
-            </div>
-            <h1 className="text-5xl font-bold text-gray-800 mb-4">¡Bienvenido a ÁGAPE 2025!</h1>
-            <p className="text-xl text-gray-600">Un encuentro transformador te espera</p>
-          </div>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="mt-8 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold rounded-xl hover:from-blue-700 hover:to-blue-600 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
-          >
-            Ver animación nuevamente
-          </button>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50/50 to-yellow-50/50 flex items-center justify-center overflow-hidden relative">
-      {/* Partículas de fondo sutiles */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 flex items-center justify-center overflow-hidden relative">
+      {/* Campo de estrellas completamente independiente - sin vincular a fases */}
       <div className="absolute inset-0">
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-blue-300 rounded-full opacity-30 animate-float-slow"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 10}s`,
-              animationDuration: `${20 + Math.random() * 20}s`
-            }}
-          />
-        ))}
+        {/* Solo estrellas horizontales que fluyen constantemente */}
+        {[...Array(120)].map((_, i) => {
+          const size = Math.random() * 1.5 + 0.3;
+          const delay = Math.random() * 40; // Distribución amplia
+          const verticalPos = Math.random() * 100;
+          const speed = 15 + Math.random() * 10; // Variación mínima de velocidad
+          
+          return (
+            <div
+              key={`flow-horizontal-${i}`}
+              className="absolute bg-white rounded-full animate-constant-horizontal-flow"
+              style={{
+                left: '-15px',
+                top: `${verticalPos}%`,
+                width: `${size}px`,
+                height: `${size}px`,
+                animationDelay: `${delay}s`,
+                animationDuration: `${speed}s`,
+                opacity: Math.random() * 0.6 + 0.2,
+                boxShadow: `0 0 ${size * 2}px rgba(255, 255, 255, 0.3)`
+              }}
+            />
+          );
+        })}
+        
+        {/* Polvo estelar ultra fino que fluye */}
+        {[...Array(80)].map((_, i) => {
+          const size = Math.random() * 0.8 + 0.2;
+          const delay = Math.random() * 30;
+          const verticalPos = Math.random() * 100;
+          const speed = 12 + Math.random() * 8;
+          
+          return (
+            <div
+              key={`flow-dust-${i}`}
+              className="absolute bg-blue-100 rounded-full animate-constant-dust-flow"
+              style={{
+                left: '-8px',
+                top: `${verticalPos}%`,
+                width: `${size}px`,
+                height: `${size}px`,
+                animationDelay: `${delay}s`,
+                animationDuration: `${speed}s`,
+                opacity: Math.random() * 0.4 + 0.1,
+                boxShadow: `0 0 ${size * 3}px rgba(191, 219, 254, 0.2)`
+              }}
+            />
+          );
+        })}
       </div>
       
-      {/* Cruz de fondo con animación muy suave */}
-      <div 
-        className="absolute inset-0 flex items-center justify-center transition-all duration-2000 ease-out"
-        style={{
-          opacity: animationStage >= 1 ? 0.05 : 0,
-          transform: animationStage >= 1 ? 'scale(1)' : 'scale(0.8)'
-        }}
-      >
-        <img
-            src={logoPrincipal}
-            alt="Cruz fondo"
-            className="w-96 h-96 object-contain"
-        />
-      </div>
-      
-      {/* Gradiente radial suave */}
-      <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-white/30" />
-      
-      {/* Pasos animados con transición suave */}
-      <div className="absolute inset-0">
+      {/* Pasos de fe CON efectos de brillo al pisar */}
+      <div className="absolute inset-0 z-20">
         {footsteps.map((step, index) => (
-          <div
-            key={step.id}
-            className="absolute transition-all duration-1500 ease-out"
-            style={{
-              left: step.x,
-              top: step.y,
-              transform: `translate(-50%, -50%) rotate(${step.rotation}deg) scale(${footstepOpacity[index]})`,
-              opacity: footstepOpacity[index]
-            }}
-          >
-            <div className="relative">
-              {/* Efecto de brillo suave */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-yellow-400/20 rounded-full blur-xl scale-150" />
-              <Footprints className="w-14 h-14 text-blue-600 relative z-10" strokeWidth={2} />
+          <div key={step.id}>
+            <div
+              className="absolute transition-all duration-1500 ease-out"
+              style={{
+                left: step.x,
+                top: step.y,
+                transform: `translate(-50%, -50%) rotate(${step.rotation}deg) scale(${footstepOpacity[index] * step.scale})`,
+                opacity: footstepOpacity[index],
+                zIndex: 10
+              }}
+            >
+              <div className="relative">
+                {/* Aura de brillo cuando aparece el paso */}
+                {footstepOpacity[index] > 0 && (
+                  <div 
+                    className="absolute inset-0 rounded-full blur-xl animate-step-glow"
+                    style={{
+                      background: `radial-gradient(circle, ${
+                        index % 2 === 0 ? 'rgba(59, 130, 246, 0.4)' : 'rgba(251, 191, 36, 0.4)'
+                      } 0%, transparent 70%)`,
+                      width: '120px',
+                      height: '120px',
+                      left: '-35px',
+                      top: '-35px'
+                    }}
+                  />
+                )}
+                
+                <div className="relative z-10">
+                  <Footprints 
+                    className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 transition-all duration-500 ${
+                      index % 2 === 0 ? 'text-blue-400' : 'text-yellow-400'
+                    } filter drop-shadow-lg`}
+                    strokeWidth={2.5}
+                    style={{
+                      filter: footstepOpacity[index] > 0 ? 'drop-shadow(0 0 15px currentColor)' : 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))'
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         ))}
-        
-        {/* Línea de conexión entre pasos */}
-        <svg className="absolute inset-0 w-full h-full" style={{ opacity: animationStage >= 1 ? 0.2 : 0 }}>
-          <path
-            d={`M ${footsteps[0].x} ${footsteps[0].y} 
-                Q ${footsteps[1].x} ${footsteps[1].y} ${footsteps[2].x} ${footsteps[2].y}
-                T ${footsteps[3].x} ${footsteps[3].y}
-                Q ${footsteps[4].x} ${footsteps[4].y} ${footsteps[4].x} ${footsteps[4].y}`}
-            fill="none"
-            stroke="url(#gradient)"
-            strokeWidth="2"
-            strokeDasharray="5,5"
-            className="animate-dash"
-          />
-          <defs>
-            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#3B82F6" />
-              <stop offset="100%" stopColor="#FBBF24" />
-            </linearGradient>
-          </defs>
-        </svg>
       </div>
       
-      {/* Contenido principal */}
-      <div className="relative z-10 text-center px-8 max-w-3xl">
-        {/* Título "Pasos de Fe" con animación suave */}
+      {/* Contenido principal con efectos épicos */}
+      <div className="relative z-30 text-center px-4 sm:px-6 md:px-8 max-w-6xl mx-auto">
+        {/* Título con efectos divinos */}
         <h1 
-          className="text-6xl md:text-7xl font-bold mb-8 transition-all duration-1500 ease-out"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-8 sm:mb-10 md:mb-12 relative transition-all duration-2000 ease-out"
           style={{
-            opacity: animationStage >= 2 ? 1 : 0,
-            transform: animationStage >= 2 ? 'translateY(0)' : 'translateY(30px)'
+            opacity: animationStage >= 1 ? 1 : 0,
+            transform: animationStage >= 1 ? 'translateY(0) scale(1)' : 'translateY(50px) scale(0.8)'
           }}
         >
-          <span className="bg-gradient-to-r from-blue-600 to-yellow-500 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-blue-300 via-white to-yellow-300 bg-clip-text text-transparent animate-title-glow relative">
             Pasos de Fe
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-white/20 to-yellow-400/20 blur-2xl animate-title-aura"></div>
           </span>
         </h1>
         
-        
-        {/* Versículo bíblico con efecto de tipeo más sutil */}
+        {/* Versículo con efectos cinematográficos */}
         <div 
-          className="max-w-xl mx-auto transition-all duration-1000 ease-out"
-          style={{
-            opacity: animationStage >= 3 ? 0.7 : 0
-          }}
-        >
-          <p className="text-sm text-gray-600 italic">
-            {typedText}
-            {typedText.length < verse.length && (
-              <span className="inline-block w-0.5 h-4 bg-gray-400 ml-1 animate-blink" />
-            )}
-          </p>
-        </div>
-        
-        {/* Iconos decorativos con animación tardía */}
-        <div 
-          className="flex justify-center gap-8 mt-8 transition-all duration-1500 ease-out"
+          className="max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto relative transition-all duration-1500 ease-out"
           style={{
             opacity: animationStage >= 3 ? 1 : 0,
-            transform: animationStage >= 3 ? 'translateY(0)' : 'translateY(20px)'
+            transform: animationStage >= 3 ? 'translateY(0)' : 'translateY(30px)'
           }}
         >
-          <div className="animate-pulse-slow" style={{animationDelay: '0s'}}>
-            <Heart className="w-8 h-8 text-red-500" />
-          </div>
-          <div className="animate-pulse-slow" style={{animationDelay: '0.5s'}}>
-            <Shield className="w-8 h-8 text-blue-500" />
-          </div>
-          <div className="animate-pulse-slow" style={{animationDelay: '1s'}}>
-            <Star className="w-8 h-8 text-yellow-500" />
-          </div>
-          <div className="animate-pulse-slow" style={{animationDelay: '1.5s'}}>
-            <Users className="w-8 h-8 text-purple-500" />
+          <div className="relative p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl">
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-yellow-400/20 rounded-2xl md:rounded-3xl blur-xl animate-verse-glow"></div>
+            
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white font-medium leading-relaxed relative z-10">
+              {typedText}
+              {typedText.length < verse.length && (
+                <span className="inline-block w-0.5 h-4 sm:h-5 md:h-6 bg-yellow-400 ml-1 animate-divine-cursor shadow-lg" />
+              )}
+            </p>
           </div>
         </div>
         
-        {/* Mensaje de bienvenida */}
+        {/* Iconos celestiales */}
         <div 
-          className="mt-12 transition-all duration-1500 ease-out"
+          className="flex justify-center gap-6 sm:gap-8 md:gap-12 mt-8 sm:mt-12 md:mt-16 transition-all duration-2000 ease-out"
           style={{
-            opacity: animationStage >= 3 ? 0.8 : 0
+            opacity: animationStage >= 3 ? 1 : 0,
+            transform: animationStage >= 3 ? 'translateY(0)' : 'translateY(30px)'
           }}
         >
-          <p className="text-sm text-gray-500">
-            Dios te bendiga!
-          </p>
+          {[
+            { Icon: Heart, color: 'text-red-400', delay: '0s' },
+            { Icon: Shield, color: 'text-blue-400', delay: '0.5s' },
+            { Icon: Crown, color: 'text-yellow-400', delay: '1s' },
+            { Icon: Users, color: 'text-purple-400', delay: '1.5s' }
+          ].map(({ Icon, color, delay }, index) => (
+            <div 
+              key={index}
+              className="relative animate-celestial-float"
+              style={{ animationDelay: delay }}
+            >
+              <div className={`absolute inset-0 ${color} blur-xl opacity-50 animate-icon-glow`}></div>
+              <Icon className={`w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 ${color} relative z-10 animate-celestial-pulse filter drop-shadow-lg`} />
+            </div>
+          ))}
         </div>
       </div>
       
       <style jsx>{`
-        @keyframes smooth-fade-in {
-          from { 
+        /* Solo animaciones completamente constantes e independientes */
+        @keyframes constant-horizontal-flow {
+          0% { 
+            transform: translateX(-15px);
             opacity: 0;
-            transform: scale(0.95);
           }
-          to { 
+          3% {
             opacity: 1;
-            transform: scale(1);
+          }
+          97% {
+            opacity: 1;
+          }
+          100% { 
+            transform: translateX(calc(100vw + 15px));
+            opacity: 0;
           }
         }
         
-        @keyframes float-slow {
+        @keyframes constant-dust-flow {
+          0% { 
+            transform: translateX(-8px);
+            opacity: 0;
+          }
+          5% {
+            opacity: 1;
+          }
+          95% {
+            opacity: 0.6;
+          }
+          100% { 
+            transform: translateX(calc(100vw + 8px));
+            opacity: 0;
+          }
+        }
+        
+        /* Efecto de brillo para las pisadas */
+        @keyframes step-glow {
           0%, 100% { 
-            transform: translateY(0px) translateX(0px);
+            transform: scale(1) rotate(0deg);
             opacity: 0.3;
+          }
+          50% { 
+            transform: scale(1.2) rotate(180deg);
+            opacity: 0.6;
+          }
+        }
+        
+        @keyframes title-glow {
+          0%, 100% { 
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+          }
+          50% { 
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.7), 0 0 60px rgba(59, 130, 246, 0.4);
+          }
+        }
+        
+        @keyframes title-aura {
+          0%, 100% { 
+            opacity: 0.2;
+            transform: scale(1);
+          }
+          50% { 
+            opacity: 0.4;
+            transform: scale(1.03);
+          }
+        }
+        
+        @keyframes verse-glow {
+          0%, 100% { 
+            opacity: 0.3;
+          }
+          50% { 
+            opacity: 0.5;
+          }
+        }
+        
+        @keyframes divine-cursor {
+          0%, 50% { 
+            opacity: 1;
+            box-shadow: 0 0 8px currentColor;
+          }
+          51%, 100% { 
+            opacity: 0;
+            box-shadow: 0 0 4px currentColor;
+          }
+        }
+        
+        @keyframes celestial-float {
+          0%, 100% { 
+            transform: translateY(0px) rotate(0deg);
           }
           25% { 
-            transform: translateY(-30px) translateX(10px);
-            opacity: 0.5;
+            transform: translateY(-8px) rotate(3deg);
           }
           50% { 
-            transform: translateY(-10px) translateX(-10px);
-            opacity: 0.3;
+            transform: translateY(-4px) rotate(0deg);
           }
           75% { 
-            transform: translateY(-40px) translateX(5px);
-            opacity: 0.5;
+            transform: translateY(-12px) rotate(-3deg);
           }
         }
         
-        @keyframes pulse-slow {
+        @keyframes celestial-pulse {
           0%, 100% { 
             transform: scale(1);
-            opacity: 0.8;
+            filter: drop-shadow(0 0 8px currentColor);
           }
           50% { 
-            transform: scale(1.1);
-            opacity: 1;
+            transform: scale(1.15);
+            filter: drop-shadow(0 0 16px currentColor);
           }
         }
         
-        @keyframes blink {
-          0%, 50% { opacity: 1; }
-          51%, 100% { opacity: 0; }
-        }
-        
-        @keyframes dash {
-          to {
-            stroke-dashoffset: -10;
+        @keyframes icon-glow {
+          0%, 100% { 
+            opacity: 0.3;
+            transform: scale(1);
+          }
+          50% { 
+            opacity: 0.6;
+            transform: scale(1.3);
           }
         }
         
-        .animate-smooth-fade-in {
-          animation: smooth-fade-in 1.5s ease-out forwards;
+        /* Solo clases para animaciones constantes */
+        .animate-constant-horizontal-flow {
+          animation: constant-horizontal-flow linear infinite;
         }
         
-        .animate-float-slow {
-          animation: float-slow linear infinite;
+        .animate-constant-dust-flow {
+          animation: constant-dust-flow linear infinite;
         }
         
-        .animate-pulse-slow {
-          animation: pulse-slow 3s ease-in-out infinite;
+        .animate-step-glow {
+          animation: step-glow 3s ease-in-out infinite;
         }
         
-        .animate-blink {
-          animation: blink 1s infinite;
+        .animate-title-glow {
+          animation: title-glow 4s ease-in-out infinite;
         }
         
-        .animate-dash {
-          animation: dash 20s linear infinite;
+        .animate-title-aura {
+          animation: title-aura 5s ease-in-out infinite;
         }
         
-        .bg-gradient-radial {
-          background: radial-gradient(circle at center, transparent 0%, rgba(255,255,255,0.3) 100%);
+        .animate-verse-glow {
+          animation: verse-glow 4s ease-in-out infinite;
+        }
+        
+        .animate-divine-cursor {
+          animation: divine-cursor 1.2s infinite;
+        }
+        
+        .animate-celestial-float {
+          animation: celestial-float 5s ease-in-out infinite;
+        }
+        
+        .animate-celestial-pulse {
+          animation: celestial-pulse 3s ease-in-out infinite;
+        }
+        
+        .animate-icon-glow {
+          animation: icon-glow 4s ease-in-out infinite;
         }
       `}</style>
     </div>
