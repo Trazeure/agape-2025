@@ -3,9 +3,11 @@ import { ChevronDown, Menu, X, Star, Heart, Users, Calendar, MapPin, Send, Check
 import PasosDeFe from './components/PasosDeFe';
 import logoPrincipal from './assets/logoprincipal.jpg';
 import agape from './assets/agape.jpg';
+import agape1 from './assets/agape1.jpeg';
 import PanelPreguntas from './components/PanelPreguntas';
 import AudiosHimnos from './components/AudiosHimnos';
-import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
+import UbicacionEvento from './components/UbicacionEvento';
+import { FaFacebookF, FaInstagram} from "react-icons/fa";
 import m1 from './assets/moment1.jpeg';
 import m2 from './assets/moment2.jpeg';
 import m3 from './assets/moment3.jpeg';
@@ -108,9 +110,9 @@ const AgapeEventPage = () => {
   // Mensaje dinámico según hora del día
   const getDynamicGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "¡Buenos días! Dios tiene grandes planes para ti hoy";
+    if (hour < 12) return "¡Buenos días! Dios tiene planes para ti hoy";
     if (hour < 18) return "¡Buenas tardes! Es el momento perfecto para asegurar tu lugar";
-    return "¡Buenas noches! No dejes pasar esta oportunidad divina";
+    return "¡Buenas noches! No dejes pasar esta oportunidad";
   };
 
   const validateField = (name, value) => {
@@ -209,7 +211,7 @@ const AgapeEventPage = () => {
     setTimeout(() => {
       setShowIntro(false);
     }, 500);
-  }, 6068); // 5 segundos de animación
+  }, 7000); // 5 segundos de animación
 
   return () => clearTimeout(timer);
   }, []);
@@ -407,7 +409,7 @@ const AgapeEventPage = () => {
     },
     {
       question: '¿Dónde será el evento?',
-      answer: 'Agape se lleva acabo en Monclova, Coahuila, en el Centro de Convenciones. La dirección exacta y mapa se publicara en nuestras redes sociales',
+      answer: 'Agape se lleva acabo en Monclova, Coahuila, en la siguiente seccion puedes ver el lugar.',
       icon: MapPin
     },
     {
@@ -573,7 +575,7 @@ const AgapeEventPage = () => {
             <div className="relative w-64 h-64 mx-auto p-1 bg-gradient-to-br from-blue-500 to-yellow-400 rounded-full animate-float">
               <div className="w-full h-full bg-white rounded-full flex items-center justify-center overflow-hidden shadow-2xl">
                 <img 
-                  src={agape} 
+                  src={agape1} 
                   alt="Logo ÁGAPE"
                   className="w-full h-full object-cover rounded-full"
                 />
@@ -657,7 +659,7 @@ const AgapeEventPage = () => {
             <h3 className="text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800">
               Completa tu Registro
             </h3>
-            <p className="text-center text-gray-600 mb-6">Únete a este encuentro transformador</p>
+            <p className="text-center text-gray-600 mb-6">Únete a esta reunion</p>
 
             {/* Barra de progreso */}
             {!showThankYou && formProgress > 0 && (
@@ -681,7 +683,7 @@ const AgapeEventPage = () => {
                   <CheckCircle className="w-12 h-12 text-white" />
                 </div>
                 <h4 className="text-3xl font-bold text-gray-800 mb-3">¡Registro Exitoso!</h4>
-                <p className="text-lg text-gray-600 mb-2">Dios tiene grandes planes para ti en ÁGAPE 2025</p>
+                <p className="text-lg text-gray-600 mb-2">Dios tiene planes para ti en ÁGAPE 2025</p>
                 <p className="text-sm text-gray-500">Te esperamos</p>
                 <div className="mt-6 p-4 bg-blue-50 rounded-xl">
                   <p className="text-blue-700 font-medium">
@@ -753,7 +755,7 @@ const AgapeEventPage = () => {
                   </div>
                   {formData.esBautizado === 'no' && (
                     <p className="mt-2 text-sm text-blue-600 animate-fadeIn">
-                      Este evento será perfecto para ti 🙏
+                      Esta reunion será perfecto para ti 🙏
                     </p>
                   )}
                 </div>
@@ -835,8 +837,8 @@ const AgapeEventPage = () => {
                     <p className="mt-1 text-sm text-green-600 animate-fadeIn">
                       {formData.edad < 18 
                         ? '¡Qué bendición ver jóvenes buscando a Dios!' 
-                        : formData.edad < 25 
-                        ? '¡La mejor edad para vivir experiencias transformadoras!'
+                        : formData.edad < 50 
+                        ? '¡Te esperamos!'
                         : '¡Nunca es tarde para un encuentro con Dios!'}
                     </p>
                   )}
@@ -877,12 +879,12 @@ const AgapeEventPage = () => {
                     <p className="mt-2 text-sm text-blue-600 animate-fadeIn">
                       Necesitas hospedaje 🏠 — 
                       <a 
-                        href="https://wa.me/5218661234567" 
+                        href="https://chat.whatsapp.com/EF6et3NJCul65ey5JVQPEB?mode=ems_share_t" 
                         target="_blank" 
                         rel="noopener noreferrer" 
                         className="font-semibold underline hover:text-blue-800"
                       >
-                        contacta a este número
+                        Unete a este grupo en whatsapp para ayudarte.
                       </a>
                     </p>
                   )}
@@ -946,7 +948,7 @@ const AgapeEventPage = () => {
                 {formProgress > 50 && (
                   <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-4 animate-fadeIn">
                     <p className="text-sm text-yellow-800 font-medium">
-                      ¡Ya casi terminas! Solo faltan unos campos más para asegurar tu lugar en este encuentro transformador.
+                      ¡Ya casi terminas! Solo faltan unos campos más para asegurar tu lugar.
                     </p>
                   </div>
                 )}
@@ -1034,27 +1036,25 @@ const AgapeEventPage = () => {
           <div className="bg-gradient-to-br from-blue-50 to-yellow-50 rounded-3xl p-10 md:p-16 shadow-xl">
             <div className="max-w-3xl mx-auto">
               <p className="text-xl text-gray-700 leading-relaxed mb-8">
-                Este año tenemos como propósito que nuestra fe se fortalezca, por lo que elegimos el tema: 
-                <span className="font-bold text-blue-500 mb-3">Pasos de fe</span> basado en 1 Juan 5:4 ...esta es la victoria que ha vencido al mundo, nuestra fe
-                Al decir <span className="font-bold text-yellow-500 mb-3">"pasos de fe"</span> nos referimos a ese salto de tu zona de confort al llamamiento de trabajar y conocer la obra del Señor.
+                Este año, tenemos como propósito que nuestra fe se fortalezca, es por eso, que elegimos el tema: 
+                <span className="font-bold text-blue-500 mb-3">Pasos de fe</span> 
               </p>
               
               <div className="grid md:grid-cols-2 gap-6 mb-8">
                 <div className="bg-white/70 backdrop-blur rounded-2xl p-6">
                   <Clock className="w-8 h-8 text-blue-500 mb-3" />
-                  <h5 className="font-bold text-gray-800 mb-2">48 Horas Intensas</h5>
-                  <p className="text-gray-600 text-sm">Cada momento está diseñado para acercarte más a Dios y a tus hermanos</p>
+                  <h5 className="font-bold text-gray-800 mb-2">Tiempo de calidad con jóvenes</h5>
+                  <p className="text-gray-600 text-sm">Esta reunión tiene como propósito convivir,apoyarnos y ofrecer un ambiente seguro dedicado para Dios.</p>
                 </div>
                 <div className="bg-white/70 backdrop-blur rounded-2xl p-6">
                   <BookOpen className="w-8 h-8 text-yellow-500 mb-3" />
-                  <h5 className="font-bold text-gray-800 mb-2">Palabra Poderosa</h5>
-                  <p className="text-gray-600 text-sm">Mensajes que transformarán tu forma de ver el amor de Dios</p>
+                  <h5 className="font-bold text-gray-800 mb-2">1 Juan 5:4</h5>
+                  <p className="text-gray-600 text-sm">Esta es la victoria que ha vencido al mundo, nuestra fe.</p>
                 </div>
               </div>
               
               <p className="text-xl text-gray-700 leading-relaxed">
-                Los últimos años se nos ha expuesto la necesidad de esforzarnos en la obra y ser ejemplo desde nuestra juventud, pero ¿Cómo podemos trabajar si no conocemos las doctrinas básicas en el cristianismo?
-                Es por eso que nos gustaría que este año se expusieran temas de conocimiento básico para el joven cristiano y de esa manera aumentar nuestro entendimiento y fe en Dios para así cumplir nuestra función como jóvenes <span className="font-bold text-red-500 mb-3">CRISTIANOS</span>.
+               Los temas que se impartirán serán de doctrina básica para el cristiano, así como talleres prácticos destinados a fortalecer nuestra fe y mejorar nuestro servicio al <span className="font-bold text-red-500 mb-3">Señor.</span>.
               </p>
             </div>
           </div>
@@ -1062,7 +1062,6 @@ const AgapeEventPage = () => {
       </section>
 
       {/* Nueva Sección de Testimonios */}
-
 
       {/* Galería mejorada */}
       <section id="galeria" className="relative z-20 py-16 px-4 bg-gray-50">
@@ -1198,13 +1197,15 @@ const AgapeEventPage = () => {
               </div>
             ))}
           </div>
+          {/* Insertar aquí el nuevo componente */}
+
 
           {/* Pregunta adicional de contacto */}
           <div className="mt-12 bg-blue-50 rounded-3xl p-8 text-center">
             <h4 className="text-xl font-bold text-gray-800 mb-3">¿Tienes más preguntas?</h4>
             <p className="text-gray-600 mb-4">Estamos aquí para ayudarte en tu camino hacia ÁGAPE</p>
             <a 
-              href="mailto:info@agape2025.com"
+              href="mailto:rajagape0@gmail.com"
               className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium"
             >
               <Send className="w-4 h-4" />
@@ -1213,6 +1214,8 @@ const AgapeEventPage = () => {
           </div>
         </div>
       </section>
+
+      <UbicacionEvento />
 
       {/* Sección de llamada a la acción mejorada */}
       <section className="relative z-20 py-20 px-4 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white overflow-hidden">
@@ -1223,7 +1226,7 @@ const AgapeEventPage = () => {
               ¿Listo para vivir ÁGAPE?
             </h3>
             <p className="text-xl mb-8 opacity-90 animate-fadeInUp animation-delay-200">
-              Estamos felices de verte pronto,, oramos por sus planes! Dios los bendiga siempre.
+              Estamos felices de verte pronto,oramos por sus planes! Dios los bendiga siempre.
             </p>
             <button
               onClick={() => scrollToSection('registro')}
@@ -1236,11 +1239,11 @@ const AgapeEventPage = () => {
             <div className="mt-12 flex flex-wrap justify-center gap-8 text-sm">
               <div className="flex items-center space-x-2">
                 <CheckCircle className="w-5 h-5" />
-                <span>Entrada Gratuita</span>
+                <span>Te esperamos</span>
               </div>
               <div className="flex items-center space-x-2">
                 <CheckCircle className="w-5 h-5" />
-                <span>Comidas Incluidas</span>
+                <span>Comidas en el evento</span>
               </div>
               <div className="flex items-center space-x-2">
                 <CheckCircle className="w-5 h-5" />
@@ -1273,7 +1276,7 @@ const AgapeEventPage = () => {
               {/* Redes sociales */}
               <div className="flex justify-center md:justify-start space-x-4">
                 <a
-                  href="https://www.facebook.com/TU_PAGINA"
+                  href="https://www.facebook.com/profile.php?id=100083175760305"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
@@ -1282,22 +1285,13 @@ const AgapeEventPage = () => {
                   <FaFacebookF className="text-white w-4 h-4" />
                 </a>
                 <a
-                  href="https://www.instagram.com/TU_USUARIO"
+                  href="https://www.instagram.com/raj.agape?igsh=NzY0bWIxZWt6N3E="
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-pink-500 transition-colors"
                   aria-label="Instagram"
                 >
                   <FaInstagram className="text-white w-4 h-4" />
-                </a>
-                <a
-                  href="https://www.youtube.com/TU_CANAL"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-                  aria-label="YouTube"
-                >
-                  <FaYoutube className="text-white w-4 h-4" />
                 </a>
               </div>
             </div>
@@ -1350,7 +1344,7 @@ const AgapeEventPage = () => {
             <div className="text-center md:text-right">
               <h4 className="text-lg font-semibold mb-4">Contacto</h4>
               <div className="space-y-2 text-gray-400">
-                <p>info@agape2025.com</p>
+                <p>rajagape0@gmail.com</p>
                 <div className="mt-4" />
               </div>
             </div>

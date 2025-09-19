@@ -32,11 +32,11 @@ const PasosDeFe = () => {
       setAnimationStage(2);
       
       // Iniciar el efecto de tipeo del versículo
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       setAnimationStage(3);
       
       // Transición final a la página principal
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise(resolve => setTimeout(resolve, 100000));
       setShowMainContent(true);
     };
     
